@@ -5,7 +5,7 @@
 -- Blacklist check
 local blackListeds = {"Yarik9847", "huyhoang28728"} 
 if table.find(blackListeds, game.Players.LocalPlayer.Name) then
-    game.Players.LocalPlayer:Kick("You have been banned from Fragmented Mode V4.")
+    game.Players.LocalPlayer:Kick("You have been banned from Fragmented Mode.")
     return
 end
 
@@ -13,7 +13,7 @@ local Player = game.Players.LocalPlayer
 local PlayerGui = Player.PlayerGui
 local MainGame = require(PlayerGui.MainUI.Initiator.Main_Game)
 
-MainGame.caption("Fragmented Mode v4 Singleplayer Version ", true)
+MainGame.caption("Fragmented Mode Singleplayer Version ", true)
 task.wait(2) 
 MainGame.caption("credits to nautic, jabiss, Noah, vynixu and noname", true)
 
@@ -24,9 +24,9 @@ end)
 
 if success and achievementGiver then
     achievementGiver({
-        Title = "Fragmented V4 Reimagined ",
+        Title = "Fragmented Reimagined ",
         Desc = "Enjoy Script",
-        Reason = "Execute Fragmented V4 By Sonic.",
+        Reason = "Execute Fragmented By Sonic.",
         Image = "rbxassetid://80921932542636"
     })
 end
@@ -103,13 +103,6 @@ Lighting.FogColor = Color3.new(0.133333, 0.149020, 0.239216)
 if Lighting:FindFirstChild("Atmosphere") then
     Lighting.Atmosphere:Destroy()
 end
-
--- Stamina
-task.spawn(function()
-    pcall(function()
-        loadstring(game:HttpGet("https://pastefy.app/EpqLU3vm/raw"))()
-    end)
-end)
 
 -- Goofy sounds configuration
 pcall(function()
