@@ -1,0 +1,123 @@
+---====== Load spawner ======---
+
+local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua"))()
+
+---====== Services ======---
+
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
+local ReSt = game:GetService("ReplicatedStorage")
+local Plr = Players.LocalPlayer
+
+---====== Lighting RED ======---
+
+local cc = Lighting:FindFirstChild("MainColorCorrection")
+if not cc then
+    cc = Instance.new("ColorCorrectionEffect")
+    cc.Name = "MainColorCorrection"
+    cc.Parent = Lighting
+end
+
+cc.TintColor = Color3.fromRGB(255, 0, 0)
+cc.Contrast = 1
+
+TweenService:Create(cc, TweenInfo.new(1.5), {Contrast = 0}):Play()
+TweenService:Create(cc, TweenInfo.new(6), {TintColor = Color3.fromRGB(255, 255, 255)}):Play()
+
+---====== Create entity ======---
+
+local entity = spawner.Create({
+    Entity = {
+        Name = "Ripper",
+        Asset = "https://github.com/junin724/V1/raw/refs/heads/main/sturgklev3.rbxm",
+        HeightOffset = 0
+    },
+
+    Lights = {
+        Flicker = {
+            Enabled = false,
+            Duration = 1
+        },
+        Shatter = false, -- Luzes não vão mais quebrar/estourar
+        Repair = false
+    },
+
+    CameraShake = {
+        Enabled = true,
+        Range = 50,
+        Values = {2.5, 20, 0.5, 1}
+    },
+
+    Movement = {
+        Speed = 100,
+        Delay = 4,
+        Reversed = false
+    },
+
+    Rebounding = {
+        Enabled = false
+    },
+
+    Damage = {
+        Enabled = true,
+        Range = 40,
+        Amount = 125 -- chạm = chết
+    },
+
+    Crucifixion = {
+        Enabled = false
+    },
+
+    Death = {
+        Type = "Guiding",
+        Hints = {"You died who you call Ripper...", "You can tell his presence by the lights and his scream.", "Hide when does this!"},
+        Cause = "Ripper"
+    }
+})
+
+---====== Callbacks ======---
+
+entity:SetCallback("OnSpawned", function()
+    print("[RIPPER] Spawned")
+end)
+
+entity:SetCallback("OnStartMoving", function()
+    print("[RIPPER] Moving")
+end)
+
+entity:SetCallback("OnDamagePlayer", function(newHealth)
+    if newHealth <= 0 then
+        if ReSt:FindFirstChild("GameStats") then
+            local stats = ReSt.GameStats:FindFirstChild("Player_" .. Plr.Name)
+            if stats then
+                stats.Total.DeathCause.Value = "Ripper"
+            end
+        end
+        
+        -- Destrói a entidade se ela existir
+        local ripperModel = workspace:FindFirstChild("Ripper")
+        if ripperModel then
+            ripperModel:Destroy()
+        end
+    end
+end)
+
+entity:SetCallback("OnDespawned", function()
+    print("[RIPPER] Despawned")
+    
+    ---====== Load achievement giver ======---
+    local achievementGiver = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Custom%20Achievements/Source.lua"))()
+
+    ---====== Display achievement ======---
+    achievementGiver({
+        Title = "Torn Apart",
+        Desc = "Dont leave to early..",
+        Reason = "Encounter Ripper.",
+        Image = "rbxassetid://17702317077"
+    })
+end)
+
+---====== Run entity ======---
+
+entity:Run()
